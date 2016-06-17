@@ -31,7 +31,7 @@ class Api
 {
     protected $version = 1;
 
-    protected $data = [];
+    protected $data = array();
 
     /**
      * @var bool Is the ApiToken required for this API
