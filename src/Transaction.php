@@ -47,6 +47,12 @@ class Transaction
         if (isset($options['currency'])) {
             $api->setCurrency($options['currency']);
         }
+        if(isset($options['expireDate'])){
+            if(is_string($options['expireDate'])){
+                $options['expireDate'] = new \DateTime($options['expireDate']);
+            }
+            $api->setExpireDate($options['expireDate']);
+        }
 
         if (isset($options['returnUrl'])) {
             $api->setFinishUrl($options['returnUrl']);
@@ -86,10 +92,16 @@ class Transaction
         }
 
         if(isset($options['invoiceDate'])){
+            if(is_string($options['invoiceDate'])){
+                $options['invoiceDate'] = new \DateTime($options['invoiceDate']);
+            }
             $api->setInvoiceDate($options['invoiceDate']);
         }
 
         if(isset($options['deliveryDate'])){
+            if(is_string($options['deliveryDate'])){
+                $options['deliveryDate'] = new \DateTime($options['deliveryDate']);
+            }
             $api->setDeliveryDate($options['deliveryDate']);
         }
 
@@ -103,6 +115,9 @@ class Transaction
         }
         $enduser = array();
         if (isset($options['enduser'])) {
+            if(isset($options['enduser']['birthDate'])){
+                $options['enduser']['birthDate'] = new \DateTime($options['enduser']['birthDate']);
+            }
             $enduser = $options['enduser'];
         }
         if (isset($options['language'])) {
@@ -151,6 +166,9 @@ class Transaction
             if (isset($options['invoiceAddress']['country'])) {
                 $invoiceAddress['countryCode'] = $options['invoiceAddress']['country'];
             }
+            if (isset($options['invoiceAddress']['gender'])) {
+                $invoiceAddress['gender'] = $options['invoiceAddress']['gender'];
+            }
 
             $enduser['invoiceAddress'] = $invoiceAddress;
         }
@@ -179,7 +197,7 @@ class Transaction
     }
 
     /**
-     * Get the transaction in an exchange script.
+     * Get the transaction in a return script.
      * This will automatically load orderId from the get string to fetch the transaction
      *
      * @return \Paynl\Result\Transaction\Transaction

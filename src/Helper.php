@@ -172,17 +172,17 @@ class Helper
     {
         $strAddress = trim($strAddress);
 
-        $a = preg_split('/([0-9]+)/', $strAddress, 2,
+        $a = preg_split('/(\\s+)([0-9]+)/', $strAddress, 2,
             PREG_SPLIT_DELIM_CAPTURE);
         $strStreetName = trim(array_shift($a));
         $strStreetNumber = trim(implode('', $a));
 
-        if (empty($strStreetName)) { // American address notation
+        if (empty($strStreetName) || empty($strStreetNumber)) { // American address notation
             $a = preg_split('/([a-zA-Z]{2,})/', $strAddress, 2,
                 PREG_SPLIT_DELIM_CAPTURE);
 
             $strStreetNumber = trim(array_shift($a));
-            $strStreetName = implode(' ', $a);
+            $strStreetName = implode('', $a);
         }
 
         return array($strStreetName, $strStreetNumber);
@@ -197,8 +197,8 @@ class Helper
     public static function getBaseUrl()
     {
         $protocol = isset($_SERVER["HTTPS"]) ? 'https' : 'http';
+        $url = $protocol . '://' . $_SERVER['SERVER_NAME'] .':'.$_SERVER['SERVER_PORT']. $_SERVER['REQUEST_URI'];
 
-        $url = $protocol . '://' . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
 
         // op de laatste / afknippen (index.php willen we niet zien)
         $baseUrl = substr($url, 0, strrpos($url, '/'));
