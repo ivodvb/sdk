@@ -24,8 +24,33 @@ namespace Paynl\Error;
  *
  * @author Andy Pieters <andy@andypieters.nl>
  */
+/**
+ * Class Error
+ *
+ * @package Paynl\Error
+ */
 class Error extends \Exception
 {
+    /**
+     * @var string
+     */
+    protected $serviceId;
+
+    /**
+     * @var string
+     */
+    protected $apiToken;
+
+    /**
+     * @var string
+     */
+    protected $apiEndpoint;
+
+    /**
+     * @var string
+     */
+    protected $apiEndpointVersion;
+    
     /**
      * @var mixed
      */
@@ -44,7 +69,87 @@ class Error extends \Exception
     }
 
     /**
-     * @return mixed
+     * @return string
+     */
+    public function getServiceId()
+    {
+        return $this->serviceId;
+    }
+
+    /**
+     * @param string $serviceId
+     *
+     * @return Error
+     */
+    public function setServiceId($serviceId)
+    {
+        $this->serviceId = $serviceId;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getApiToken()
+    {
+        return $this->apiToken;
+    }
+
+    /**
+     * @param mixed $apiToken
+     *
+     * @return Error
+     */
+    public function setApiToken($apiToken)
+    {
+        $this->apiToken = $apiToken;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getApiEndpoint()
+    {
+        return $this->apiEndpoint;
+    }
+
+    /**
+     * @param string $apiEndpoint
+     *
+     * @return Error
+     */
+    public function setApiEndpoint($apiEndpoint)
+    {
+        $this->apiEndpoint = $apiEndpoint;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getApiEndpointVersion()
+    {
+        return $this->apiEndpointVersion;
+    }
+
+    /**
+     * @param string $apiEndpointVersion
+     *
+     * @return Error
+     */
+    public function setApiEndpointVersion($apiEndpointVersion)
+    {
+        $this->apiEndpointVersion = $apiEndpointVersion;
+
+        return $this;
+    }
+
+    /**
+     * @return string
      */
     public function getAdditionalData()
     {

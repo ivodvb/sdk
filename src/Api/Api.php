@@ -108,7 +108,12 @@ class Api
             // went wrong
 
             $error = new Error\Error($curl->errorMessage);
-            $error->setAdditionalData($result);
+            $error
+                ->setAdditionalData($result)
+                ->setServiceId(Config::getServiceId())
+                ->setApiToken(Config::getApiToken())
+                ->setApiEndpoint($endpoint)
+                ->setApiEndpointVersion($version);
 
             throw $error;
         }
