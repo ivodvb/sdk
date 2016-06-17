@@ -18,7 +18,6 @@
 
 namespace Paynl\Api;
 
-use Curl\Curl;
 use Paynl\Config;
 use Paynl\Error;
 use Paynl\Helper;
@@ -32,12 +31,13 @@ class Api
 {
     protected $version = 1;
 
-    protected $data = array();
+    protected $data = [];
 
     /**
      * @var bool Is the ApiToken required for this API
      */
     protected $apiTokenRequired = false;
+
     /**
      * @var bool Is the serviceId required for this API
      */
@@ -55,16 +55,17 @@ class Api
 
     protected function getData()
     {
-        if($this->isApiTokenRequired()) {
+        if ($this->isApiTokenRequired()) {
             Helper::requireApiToken();
 
             $this->data['token'] = Config::getApiToken();
         }
-        if($this->isServiceIdRequired()){
+        if ($this->isServiceIdRequired()) {
             Helper::requireServiceId();
 
             $this->data['serviceId'] = Config::getServiceId();
         }
+
         return $this->data;
     }
 
@@ -72,38 +73,44 @@ class Api
     {
         $output = Helper::objectToArray($result);
 
-        if(!is_array($output)){
+        if (!is_array($output)) {
             throw new Error\Api($output);
         }
 
         if ($output['request']['result'] != 1 && $output['request']['result'] != 'TRUE') {
-            throw new Error\Api($output['request']['errorId'] . ' - ' . $output['request']['errorMessage']);
+            throw new Error\Api($output['request']['errorId'].' - '.$output['request']['errorMessage']);
         }
+
         return $output;
     }
 
     public function doRequest($endpoint, $version = null)
     {
-        if(is_null($version)){
+        if (is_null($version)) {
             $version = $this->version;
         }
 
         $data = $this->getData();
 
-
         $uri = Config::getApiUrl($endpoint, $version);
 
         $curl = Config::getCurl();
 
-        if(Config::getCAInfoLocation()){
+        if (Config::getCAInfoLocation()) {
             // set a custom CAInfo file
             $curl->setOpt(CURLOPT_CAINFO, Config::getCAInfoLocation());
         }
 
         $result = $curl->post($uri, $data);
 
-        if($curl->error){
-            throw new Error\Error($curl->errorMessage);
+        if ($curl->error) {
+            // todo handle 400 errors properly, the SDK user needs to know what
+            // went wrong
+
+            $error = new Error\Error($curl->errorMessage);
+            $error->setAdditionalData($result);
+
+            throw $error;
         }
 
         $output = static::processResult($result);

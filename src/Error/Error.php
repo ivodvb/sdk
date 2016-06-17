@@ -26,5 +26,40 @@ namespace Paynl\Error;
  */
 class Error extends \Exception
 {
-    //put your code here
+    /**
+     * @var mixed
+     */
+    protected $additionalData;
+
+    /**
+     * Error constructor.
+     *
+     * @param null            $message
+     * @param int             $code
+     * @param \Exception|null $previous
+     */
+    public function __construct($message = null, $code = 0, \Exception $previous = null)
+    {
+        parent::__construct($message, $code, $previous);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAdditionalData()
+    {
+        return $this->additionalData;
+    }
+
+    /**
+     * @param mixed $additionalData
+     *
+     * @return Error
+     */
+    public function setAdditionalData($additionalData)
+    {
+        $this->additionalData = $additionalData;
+
+        return $this;
+    }
 }
